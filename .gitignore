@@ -3,3 +3,7 @@ Api/AsChatApi.iml
 Client/AsChatClient.iml
 Server/AsChatServer.iml
 AsChat.iml
+/Api/target/
+/Client/target/
+/Server/target
+/target/
