@@ -1,6 +1,7 @@
-package com.github.lory24.aschatapi.storage;
+package com.github.lory24.aschatapi.keys;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import lombok.SneakyThrows;
 
 import java.io.*;
@@ -15,7 +16,7 @@ public class KeysData {
     private final File file;
 
     public KeysData(String dataFolderPath) {
-        file = new File(dataFolderPath + "/keys.data");
+        file = new File(dataFolderPath + "keys.data");
     }
 
     @SneakyThrows
@@ -28,22 +29,25 @@ public class KeysData {
             KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("RSA");
             keyPairGenerator.initialize(2048, secureRandom);
             KeyPair keyPair = keyPairGenerator.generateKeyPair();
-            System.out.println("Generated public key: " + keyPair.getPublic().toString());
 
+            GsonBuilder gsonBuilder = new GsonBuilder();
+            gsonBuilder.excludeFieldsWithoutExposeAnnotation();
             Gson gson = new Gson();
-            String keyPairJson = gson.toJson(keyPair);
-            System.out.println(keyPairJson);
+            KeysBytesGson keysBytesGson = new KeysBytesGson(keyPair.getPublic().getEncoded(), keyPair.getPrivate().getEncoded());
+            String keysBytesJson = gson.toJson(keysBytesGson);
 
             FileWriter fileWriter = new FileWriter(file.getAbsolutePath());
-            fileWriter.write(keyPairJson);
+            fileWriter.write(keysBytesJson);
             fileWriter.close();
         }
     }
 
     @SneakyThrows
-    public KeyPair readKeys() {
+    public KeysStorageData readKeys() {
         String fileContent = Files.readString(Paths.get(file.getAbsolutePath()));
         Gson gson = new Gson();
-        return gson.fromJson(fileContent, KeyPair.class);
+        KeysBytesGson keysBytesGson = gson.fromJson(fileContent, KeysBytesGson.class);
+        return new KeysStorageData(keysBytesGson.getPublicKeyBytes(),
+                keysBytesGson.getPrivateKeyBytes());
     }
 }
