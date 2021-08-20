@@ -1,13 +1,11 @@
 package test;
 
-import com.github.lory24.aschatapi.storage.KeysData;
 import lombok.SneakyThrows;
 
 import javax.xml.bind.DatatypeConverter;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.SecureRandom;
-import java.util.Arrays;
 
 public class Test {
 
