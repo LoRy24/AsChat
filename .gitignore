@@ -1,1 +1,5 @@
 /.idea/
+Api/AsChatApi.iml
+Client/AsChatClient.iml
+Server/AsChatServer.iml
+AsChat.iml
